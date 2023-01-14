@@ -1,5 +1,5 @@
 # GitHub Action - Markdown link check 🔗✔️
-[![GitHub Marketplace](https://img.shields.io/badge/GitHub%20Marketplace-Markdown%20link%20check-brightgreen?style=for-the-badge)](https://github.com/marketplace/actions/markdown-link-check) [![Buy us a tree](https://img.shields.io/badge/Treeware-%F0%9F%8C%B3-lightgreen?style=for-the-badge)](https://plant.treeware.earth/gaurav-nelson/github-action-markdown-link-check)
+[![GitHub Marketplace](https://img.shields.io/badge/GitHub%20Marketplace-Markdown%20link%20check-brightgreen?style=for-the-badge)](https://github.com/marketplace/actions/markdown-link-check)
 
 This GitHub action checks all Markdown files in your repository for broken links. (Uses [tcort/markdown-link-check](https://github.com/tcort/markdown-link-check))
 
@@ -9,9 +9,9 @@ This GitHub action checks all Markdown files in your repository for broken links
 
    ```yml
    name: Check Markdown links
-   
+
    on: push
-   
+
    jobs:
      markdown-link-check:
        runs-on: ubuntu-latest
@@ -25,14 +25,15 @@ This GitHub action checks all Markdown files in your repository for broken links
 Following is a list of some of the repositories which are using GitHub Action -
 Markdown link check.
 
-1. [GoogleChrome/lighthouse](https://github.com/GoogleChrome/lighthouse/blob/master/.github/workflows/check-md-links.yml)
+1. [netdata](https://github.com/netdata/netdata/blob/master/.github/workflows/docs.yml) ![](https://img.shields.io/github/stars/netdata/netdata?style=social)
+1. [GoogleChrome/lighthouse (Weekly cron job)](https://github.com/GoogleChrome/lighthouse/blob/master/.github/workflows/cron-weekly.yml)
    ![](https://img.shields.io/github/stars/GoogleChrome/lighthouse?style=social)
-1. [hashicorp/packer](https://github.com/hashicorp/packer/blob/master/.github/workflows/linkchecker.yml)
-   ![](https://img.shields.io/github/stars/hashicorp/packer?style=social)
-1. [prometheus-operator](https://github.com/prometheus-operator/prometheus-operator/blob/master/.github/workflows/ci.yaml#L29)
-   ![](https://img.shields.io/github/stars/prometheus-operator/prometheus-operator?style=social)
-1. [apache/apisix](https://github.com/apache/apisix/blob/master/.github/workflows/markdown-link-checker.yml)
-   ![](https://img.shields.io/github/stars/apache/apisix?style=social)
+1. [tendermint/tendermint](https://github.com/tendermint/tendermint/blob/master/.github/workflows/markdown-links.yml)
+   ![](https://img.shields.io/github/stars/tendermint/tendermint?style=social)
+1. [pyroscope-io/pyroscope](https://github.com/pyroscope-io/pyroscope/blob/main/.github/workflows/lint-markdown.yml)
+   ![](https://img.shields.io/github/stars/pyroscope-io/pyroscope?style=social)
+
+If you are using this on production, consider [buying me a coffee](https://ko-fi.com/gauravnelson) ☕.
 
 ## Configuration
 
@@ -41,6 +42,7 @@ Markdown link check.
 - [Disable check for some links](#disable-check-for-some-links)
 - [Check only modified files in a pull request](#check-only-modified-files-in-a-pull-request)
 - [Status code 429: Too many requests](#too-many-requests)
+- [GitHub links failure fix](#github-links-failure-fix)
 
 ### Custom variables
 You customize the action by using the following variables:
@@ -89,7 +91,7 @@ for more details.
 ```yml
 name: Check Markdown links
 
-on: 
+on:
   push:
     branches:
     - master
@@ -120,7 +122,7 @@ checking for certain links in a markdown document.
      ```md
      <!-- markdown-link-check-disable -->
      ## Section
-     
+
      Disbale link checking in this section. Ignore this [Bad Link](https://exampleexample.cox)
      <!-- markdown-link-check-enable -->
      ```
@@ -131,7 +133,7 @@ checking for certain links in a markdown document.
 ### Check only modified files in a pull request
 
 Use the following workflow to only check links in modified markdown files in a
-pull request. 
+pull request.
 
 When
 you use this variable, the action finds modififed files between two commits:
@@ -186,8 +188,56 @@ Or mark 429 status code as alive:
 }
 ```
 
+### GitHub links failure fix
+Use the following `httpHeaders` in your custom configuration file to fix GitHub links failure.
+
+```json
+{
+  "httpHeaders": [
+    {
+      "urls": ["https://github.com/", "https://guides.github.com/", "https://help.github.com/", "https://docs.github.com/"],
+      "headers": {
+        "Accept-Encoding": "zstd, br, gzip, deflate"
+      }
+    }
+  ]
+}
+```
+
+## Example Usage
+
+Consider a workflow file that checks for the status of hyperlinks on push to the master branch,
+
+``` yml
+name: Check .md links
+
+on:
+  push: [master]
+
+jobs:
+  markdown-link-check:
+    runs-on: ubuntu-latest
+    # check out the latest version of the code
+    steps:
+    - uses: actions/checkout@v3
+
+    # Checks the status of hyperlinks in .md files in verbose mode
+    - name: Check links
+      uses: gaurav-nelson/github-action-markdown-link-check@v1
+      with:
+        use-verbose-mode: 'yes'
+```
+A file `test.md` exists, containing
+
+![image](https://user-images.githubusercontent.com/53875297/159135478-87194037-f3d6-4ca9-9da8-f01dac482fbc.png)
+
+On running the workflow described above, the output shown below is obtained
+
+![image](https://user-images.githubusercontent.com/53875297/159135426-9f439d39-8bb3-40f0-9255-9efe2b493c1a.png)
+
+
 ## Versioning
-GitHub Action - Markdown link check follows the [GitHub recommended versioning strategy](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md). 
+GitHub Action - Markdown link check follows the [GitHub recommended versioning strategy](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md).
 
 1. To use a specific released version of the action ([Releases](https://github.com/gaurav-nelson/github-action-markdown-link-check/releases)):
    ```yml
@@ -201,3 +251,10 @@ GitHub Action - Markdown link check follows the [GitHub recommended versioning s
    ```yml
    - uses: gaurav-nelson/github-action-markdown-link-check@44a942b2f7ed0dc101d556f281e906fb79f1f478
    ```
+
+<hr>
+<p align="center">
+ <a name="coffee" href="https://ko-fi.com/gauravnelson">
+  <img src="https://i.imgur.com/1Q1YoHz.gif" alt="Buy me a coffee.">
+ </a>
+</p>
