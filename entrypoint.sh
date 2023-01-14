@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -eu
+set -efu
 
 NC='\033[0m' # No Color
 GREEN='\033[0;32m'
@@ -31,7 +31,7 @@ else
    FILE_EXTENSION="$8"
 fi
 FILE_PATH="$9"
-EXCLUDE_DIRS=$(echo ${10})
+EXCLUDE_DIRS="${10}"
 
 if [ -f "$CONFIG_FILE" ]; then
    echo -e "${BLUE}Using markdown-link-check configuration file: ${YELLOW}$CONFIG_FILE${NC}"
