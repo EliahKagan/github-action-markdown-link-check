@@ -8,7 +8,7 @@ YELLOW='\033[0;33m'
 BLUE='\033[0;34m'
 RED='\033[0;31m'
 
-npm i -g markdown-link-check@3.10.2
+npm i -g markdown-link-check@3.10.3
 echo "::group::Debug information"
 npm -g list --depth=1
 echo "::endgroup::"
@@ -193,7 +193,8 @@ if [ "$CHECK_MODIFIED_FILES" = "yes" ]; then
 
    add_options
 
-   mapfile -t FILE_ARRAY < <( git diff --name-only --diff-filter=AM "$MASTER_HASH" )
+   FOLDER_ARRAY=(${FOLDER_PATH//,/ })
+   mapfile -t FILE_ARRAY < <( git diff --name-only --diff-filter=AM "$MASTER_HASH" -- "${FOLDER_ARRAY[@]}")
 
    for i in "${FILE_ARRAY[@]}"
       do

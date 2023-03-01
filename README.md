@@ -41,6 +41,7 @@ If you are using this on production, consider [buying me a coffee](https://ko-fi
 - [Scheduled runs](#scheduled-runs)
 - [Disable check for some links](#disable-check-for-some-links)
 - [Check only modified files in a pull request](#check-only-modified-files-in-a-pull-request)
+- [Check multiple directories and files](#check-multiple-directories-and-files)
 - [Status code 429: Too many requests](#too-many-requests)
 - [GitHub links failure fix](#github-links-failure-fix)
 
@@ -51,7 +52,7 @@ You customize the action by using the following variables:
 |:----------|:--------------|:-----------|
 |`use-quiet-mode`| Specify `yes` to only show errors in output.| `no`|
 |`use-verbose-mode`|Specify `yes` to show detailed HTTP status for checked links. |`no` |
-|`config-file`|Specify a [custom configuration file](https://github.com/tcort/markdown-link-check#config-file-format) for markdown-link-check. You can use it to remove false-positives by specifying replacement patterns and ignore patterns.|`mlc_config.json`|
+|`config-file`|Specify a [custom configuration file](https://github.com/tcort/markdown-link-check#config-file-format) for markdown-link-check. You can use it to remove false-positives by specifying replacement patterns and ignore patterns. The filename is interpreted relative to the repository root.|`mlc_config.json`|
 |`folder-path` |By default the `github-action-markdown-link-check` action checks for all markdown files in your repository. Use this option to limit checks to only specific folders. Use comma separated values for checking multiple folders. |`.` |
 |`max-depth` |Specify how many levels deep you want to check in the directory structure. The default value is `-1` which means check all levels.|`-1` |
 |`check-modified-files-only` |Use this variable to only check modified markdown files instead of checking all markdown files. The action uses `git` to find modified markdown files. Only use this variable when you run the action to check pull requests.|`no`|
@@ -82,7 +83,7 @@ jobs:
 
 ### Scheduled runs
 In addition to checking links on every push, or pull requests, its also a good
-hygine to check for broken links regularly as well. See
+hygiene to check for broken links regularly as well. See
 [Workflow syntax for GitHub Actions - on.schedule](https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#onschedule)
 for more details.
 
@@ -136,7 +137,7 @@ Use the following workflow to only check links in modified markdown files in a
 pull request.
 
 When
-you use this variable, the action finds modififed files between two commits:
+you use this variable, the action finds modified files between two commits:
 - latest commit in you PR
 - latest commit in the `master` branch. If you are suing a different branch to
   merge PRs, specify the branch using `base-branch`.
